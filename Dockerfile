@@ -7,8 +7,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     groff \
     && rm -rf /var/lib/apt/lists/*
 
-# Install AWS CLI v2
-RUN curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip \
+# Install AWS CLI v2 (supports both x86_64 and ARM64 / Apple Silicon)
+RUN ARCH=$(uname -m) \
+    && if [ "$ARCH" = "aarch64" ]; then \
+         AWS_ZIP="awscli-exe-linux-aarch64.zip"; \
+       else \
+         AWS_ZIP="awscli-exe-linux-x86_64.zip"; \
+       fi \
+    && curl -fsSL "https://awscli.amazonaws.com/$AWS_ZIP" -o /tmp/awscliv2.zip \
     && unzip -q /tmp/awscliv2.zip -d /tmp \
     && /tmp/aws/install \
     && rm -rf /tmp/awscliv2.zip /tmp/aws
