@@ -4,6 +4,12 @@
 
 source ./common.sh
 
+cleanup() {
+  rm -f code.zip
+  rm -rf resources python_3 __pycache__
+}
+trap cleanup EXIT
+
 REGION="us-east-1"
 TABLE_NAME="FoodProducts"
 

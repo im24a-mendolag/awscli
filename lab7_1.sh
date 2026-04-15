@@ -5,6 +5,12 @@
 source ./common.sh
 set -e
 
+cleanup() {
+  rm -f code.zip lab5_code.zip
+  rm -rf resources python_3 __pycache__ lab5_temp
+}
+trap cleanup EXIT
+
 REGION="us-east-1"
 TABLE_NAME="FoodProducts"
 INDEX_NAME="special_GSI"

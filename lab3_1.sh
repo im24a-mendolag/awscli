@@ -6,6 +6,12 @@ source ./common.sh
 
 set -e  # Exit on error
 
+cleanup() {
+  rm -f code.zip website_security_policy.json
+  rm -rf resources python_3 __pycache__
+}
+trap cleanup EXIT
+
 # --- Config ---
 read -rp "Enter your lowercase initials: " INITIALS
 DATE=$(date +%Y-%m-%d)

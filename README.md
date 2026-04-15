@@ -1,40 +1,67 @@
 # AWS Academy Lab Scripts
 
-Bash scripts that automate the CLI/SDK tasks for each AWS Academy lab (CUR-TF-200-ACCDEV-2-91558). Run locally on Windows with Git Bash.
+Bash scripts that automate the CLI/SDK tasks for each AWS Academy lab (CUR-TF-200-ACCDEV-2-91558).
 
 ---
 
-## Prerequisites
+## Running with Docker (recommended on Mac, Linux, or Windows)
 
-### 1. Git Bash
+Use Docker for a consistent environment — avoids platform differences with `sed`, `grep`, and Python paths across Mac, Linux, and Windows (Git Bash).
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Mac, Linux, or Windows)
+- A `.env` file with your AWS credentials (see [Setup](#setup-required-before-every-lab) below)
+
+### Run a lab
+
+```bash
+# First run — builds the image automatically, then runs the script
+./run_lab.sh lab5_1.sh
+
+# Force a rebuild (e.g. after pulling new script changes)
+./run_lab.sh lab5_1.sh --build
+```
+
+The image is built once and reused for subsequent runs. Any files downloaded during the lab (e.g. `code.zip`) are written to your local folder via a bind mount.
+
+---
+
+## Running without Docker (Windows Git Bash only)
+
+### Prerequisites
+
+**1. Git Bash**  
 Download and install from https://git-scm.com/downloads  
 All scripts must be run inside **Git Bash**, not PowerShell or CMD.
 
-### 2. AWS CLI v2
+**2. AWS CLI v2**  
 Download and install from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html  
-If Git Bash can't find `aws` after installing, add it to your PATH by running:
+If Git Bash can't find `aws` after installing, add it to your PATH:
 ```bash
 export PATH=$PATH:"/c/Program Files/Amazon/AWSCLIV2"
 ```
-To make this permanent, add that line to your `~/.bashrc` file.  
+To make this permanent, add that line to your `~/.bashrc`.  
 Verify: `aws --version`
 
-### 3. Python 3
+**3. Python 3**  
 Download and install from https://www.python.org/downloads/  
-Make sure to check **"Add Python to PATH"** during install.  
+Check **"Add Python to PATH"** during install.  
 Verify: `python3 --version`
 
-### 4. pip / boto3
-boto3 is installed automatically by each script. You can also install manually:
+**4. pip / boto3**  
+boto3 is installed automatically by each script. To install manually:
 ```bash
 pip3 install boto3
 ```
 
-### 5. curl and unzip
-Included with Git Bash. Verify:
+**5. curl and unzip**  
+Included with Git Bash. Verify: `curl --version` and `unzip -v`
+
+### Run a lab
+
 ```bash
-curl --version
-unzip -v
+bash lab5_1.sh
 ```
 
 ---
@@ -42,13 +69,15 @@ unzip -v
 ## Setup (required before every lab)
 
 ### 1. Get fresh AWS credentials
-Each AWS Academy lab session gives you temporary credentials that expire.
+
+Each AWS Academy lab session gives you temporary credentials that expire when the session ends.
 
 1. In the lab console click **Details → Show**
 2. Copy the three credential values
 
 ### 2. Create or update `.env`
-Create a file named `.env` in this folder with your credentials:
+
+Copy `.env.example` and fill in your credentials:
 
 ```
 AWS_ACCESS_KEY_ID=ASIA...
@@ -63,18 +92,6 @@ The `.env` file is loaded automatically by every script via `common.sh`.
 
 ---
 
-## Running a script
-
-Open Git Bash, navigate to this folder, and run:
-
-```bash
-bash lab3_1.sh
-```
-
-Each script is idempotent — safe to re-run if it fails partway through.
-
----
-
 ## Lab Scripts
 
 | Script | Lab | What it does |
@@ -84,6 +101,9 @@ Each script is idempotent — safe to re-run if it fails partway through.
 | `lab5_1.sh` | Lab 5.1 | DynamoDB table, batch load, GSI, queries |
 | `lab6_1.sh` | Lab 6.1 | API Gateway REST API with mock integrations |
 | `lab7_1.sh` | Lab 7.1 | Lambda functions, API Gateway Lambda integration |
+
+Each script is idempotent — safe to re-run if it fails partway through.
+
 ---
 
 ## Troubleshooting

@@ -6,6 +6,11 @@ source ./common.sh
 
 set -e  # Exit on error
 
+cleanup() {
+  rm -f list-buckets.py index.html
+}
+trap cleanup EXIT
+
 echo "==> Verifying AWS CLI installation..."
 aws --version
 

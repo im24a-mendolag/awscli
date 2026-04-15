@@ -6,6 +6,12 @@ source ./common.sh
 
 set -e
 
+cleanup() {
+  rm -f code.zip
+  rm -rf resources python_3 __pycache__
+}
+trap cleanup EXIT
+
 REGION="us-east-1"
 
 # -------------------------------------------------------
@@ -57,6 +63,7 @@ echo ""
 echo "==> [Task 2] Checking if ProductsApi already exists..."
 API_ID=$(aws apigateway get-rest-apis --region $REGION \
   --query "items[?name=='ProductsApi'].id" --output text)
+API_ID=$(echo "$API_ID" | grep -v '^None$')
 
 if [ -z "$API_ID" ]; then
   echo "==> Patching create_products_api.py..."
@@ -86,6 +93,7 @@ echo "    /products resource ID: $PRODUCTS_RESOURCE_ID"
 ON_OFFER_EXISTS=$(aws apigateway get-resources \
   --rest-api-id $API_ID --region $REGION \
   --query "items[?path=='/products/on_offer'].id" --output text)
+ON_OFFER_EXISTS=$(echo "$ON_OFFER_EXISTS" | grep -v '^None$')
 
 if [ -z "$ON_OFFER_EXISTS" ]; then
   echo "==> Patching create_on_offer_api.py..."
@@ -108,6 +116,7 @@ echo "==> [Task 4] Checking if /create_report exists..."
 CREATE_REPORT_EXISTS=$(aws apigateway get-resources \
   --rest-api-id $API_ID --region $REGION \
   --query "items[?path=='/create_report'].id" --output text)
+CREATE_REPORT_EXISTS=$(echo "$CREATE_REPORT_EXISTS" | grep -v '^None$')
 
 if [ -z "$CREATE_REPORT_EXISTS" ]; then
   echo "==> Patching create_report_api.py..."
