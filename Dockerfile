@@ -27,7 +27,7 @@ WORKDIR /lab
 # Copy all lab scripts into the image
 COPY *.sh ./
 
-# Make scripts executable
-RUN chmod +x *.sh
+# Strip Windows carriage returns and make scripts executable
+RUN sed -i 's/\r//' *.sh && chmod +x *.sh
 
 CMD ["/bin/bash"]
