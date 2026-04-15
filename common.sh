@@ -6,9 +6,15 @@ if [ ! -f .env ]; then
   echo "ERROR: .env file not found. Create one with your AWS credentials."
   exit 1
 fi
+# Strip Windows carriage returns (\r) so the file works whether edited on
+# Windows or Mac/Linux. Without this, values get a \r appended and AWS CLI
+# rejects the credentials even though they look correct.
+_ENV_CLEAN=$(mktemp)
+tr -d '\r' < .env > "$_ENV_CLEAN"
 set -a
-source .env
+source "$_ENV_CLEAN"
 set +a
+rm -f "$_ENV_CLEAN"
 # -----------------
 
 # --- Credential check ---
