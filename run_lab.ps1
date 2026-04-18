@@ -21,8 +21,8 @@ if (-not (Test-Path ".env")) {
 }
 
 # Build the image if it doesn't exist yet, or if --Build is passed
-$imageExists = docker image inspect $Image 2>$null
-if ($Build -or -not $imageExists) {
+docker image inspect $Image 2>&1 | Out-Null
+if ($Build -or $LASTEXITCODE -ne 0) {
     Write-Host "==> Building Docker image '$Image'..."
     docker build -t $Image .
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -37,4 +37,4 @@ docker run --rm -it `
     --env-file .env `
     -v "${HostPwd}:/lab" `
     $Image `
-    bash $Script
+    bash -c "sed -i 's/\r//g' /lab/*.sh && bash /lab/$Script"

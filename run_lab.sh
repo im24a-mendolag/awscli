@@ -45,4 +45,4 @@ docker run --rm -it \
   --env-file .env \
   -v "$HOST_PWD:/lab" \
   "$IMAGE" \
-  bash "$SCRIPT"
+  bash -c "sed -i 's/\r//g' /lab/*.sh && bash /lab/$SCRIPT"
